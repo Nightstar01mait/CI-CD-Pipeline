@@ -90,35 +90,35 @@ jobs:
   # -------------------------------------------------------------
   # Stage 3: Continuous Deployment (CD to Server)
   # -------------------------------------------------------------
-  deploy:
-    name: Deploy to Production
-    needs: build-and-push
-    # Only deploy if it's a push to main or a new tag
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))
-    runs-on: ubuntu-latest
-    steps:
-      - name: Execute Remote SSH Commands
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            # Navigate to the deployment directory
-            cd /opt/myapp || mkdir -p /opt/myapp && cd /opt/myapp
-            
-            # (Optional) Log in to GHCR on the server to be able to pull
-            echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            
-            # Pull the latest imagery (using the SHA tag or branch tag depending on strategy)
-            # Example using branch tag (latest from main):
-            export GHCR_IMAGE=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main
-            docker pull $GHCR_IMAGE
-            
-            # Down the old container and start the new one
-            # Ensure docker-compose.yml exists on the server first
-            docker compose down || true
-            docker compose up -d
-            
-            # Cleanup old unused images to save disk space
-            docker image prune -af
+  # deploy:
+  #   name: Deploy to Production
+  #   needs: build-and-push
+  #   # Only deploy if it's a push to main or a new tag
+  #   if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Execute Remote SSH Commands
+  #       uses: appleboy/ssh-action@v1.0.3
+  #       with:
+  #         host: ${{ secrets.SSH_HOST }}
+  #         username: ${{ secrets.SSH_USERNAME }}
+  #         key: ${{ secrets.SSH_PRIVATE_KEY }}
+  #         script: |
+  #           # Navigate to the deployment directory
+  #           cd /opt/myapp || mkdir -p /opt/myapp && cd /opt/myapp
+  #           
+  #           # (Optional) Log in to GHCR on the server to be able to pull
+  #           echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+  #           
+  #           # Pull the latest imagery (using the SHA tag or branch tag depending on strategy)
+  #           # Example using branch tag (latest from main):
+  #           export GHCR_IMAGE=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main
+  #           docker pull $GHCR_IMAGE
+  #           
+  #           # Down the old container and start the new one
+  #           # Ensure docker-compose.yml exists on the server first
+  #           docker compose down || true
+  #           docker compose up -d
+  #           
+  #           # Cleanup old unused images to save disk space
+  #           docker image prune -af
