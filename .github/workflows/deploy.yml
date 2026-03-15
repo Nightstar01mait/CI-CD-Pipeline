@@ -108,7 +108,7 @@ jobs:
             cd /opt/myapp || mkdir -p /opt/myapp && cd /opt/myapp
             
             # (Optional) Log in to GHCR on the server to be able to pull
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             
             # Pull the latest imagery (using the SHA tag or branch tag depending on strategy)
             # Example using branch tag (latest from main):
