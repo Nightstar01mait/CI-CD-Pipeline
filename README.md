@@ -1,7 +1,7 @@
-# CI/CD Pipeline Architecture and Implementation
+# CI/CD Pipeline & Automated Deployment System 
 
 **Author:** Gaurav Raj  
-**Module:** Internship Task – CI/CD Pipeline & Deployment Automation  
+**Module:** Internship Task – CI/CD Pipeline & Automated Deployment System 
 **Status:** Task Completed
 
 ---
